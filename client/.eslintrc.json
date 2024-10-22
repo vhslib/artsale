@@ -1,0 +1,10 @@
+{
+    "root": true,
+    "extends": [
+        "vhslib-typescript",
+        "vhslib-typescript-vue"
+    ],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    }
+}

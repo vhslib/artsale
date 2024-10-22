@@ -1,0 +1,14 @@
+{
+    "extends": "./tsconfig.base.json",
+    "include": ["src/**/*.ts", "src/**/*.vue", "vite.config.ts", "server-dev.ts"],
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "lib": ["esnext", "DOM"],
+        "types": ["vite/client", "web-bluetooth"],
+        "jsx": "preserve"
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "root": true,
+    "extends": "vhslib-typescript",
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    },
+    "rules": {
+        "import/no-unused-modules": "off"
+    }
+}

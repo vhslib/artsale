@@ -1,0 +1,8 @@
+client/node_modules
+client/dist
+server/node_modules
+server/dist
+server/.env
+shared/lib
+shared/node_modules
+shared/src/index.ts

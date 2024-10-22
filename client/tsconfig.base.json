@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "types": [],
+        "lib": [],
+        "strict": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noUncheckedIndexedAccess": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noImplicitOverride": true
+    }
+}

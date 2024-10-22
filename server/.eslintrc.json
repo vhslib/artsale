@@ -1,0 +1,7 @@
+{
+    "root": true,
+    "extends": "vhslib-typescript",
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    }
+}

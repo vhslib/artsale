@@ -1,0 +1,162 @@
+datasource db {
+    provider = "postgresql"
+    url = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native"]
+}
+
+model User {
+    id Int @id @default(autoincrement())
+
+    email String @unique
+    phone String @unique
+    password String
+    firstName String
+    lastName String
+
+    role UserRole @default(USER)
+
+    emailConfirmed Boolean @default(false)
+    phoneConfirmed Boolean @default(false)
+
+    emailConfirmationCode String?
+    phoneConfirmationCode String?
+
+    passwordResetCode String?
+
+    items Item[]
+
+    actionLogs UserActionLog[]
+
+    createdDialogs ChatDialog[] @relation("ChatDialog.creator")
+    acceptedDialogs ChatDialog[] @relation("ChatDialog.acceptor")
+
+    sentMessages ChatMessage[] @relation("ChatMessage.sender")
+    receivedMessages ChatMessage[] @relation("ChatMessage.receiver")
+}
+
+enum UserRole {
+    USER
+    ADMIN
+}
+
+model Item {
+    id Int @id @default(autoincrement())
+
+    // Link to the author
+    author User @relation(fields: [authorId], references: [id])
+    authorId Int
+
+    // General properties
+    name String
+    description String
+    price Int
+    images String[]
+    status ItemStatus @default(ACTIVE)
+    datePublished DateTime @default(now())
+
+    // Link to the category it belongs to
+    category Category @relation(fields: [categoryId], references: [id])
+    categoryId Int
+
+    // "Item to property" link
+    itemToProperty ItemToProperty[]
+
+    dialogsStarted ChatDialog[]
+}
+
+enum ItemStatus {
+    ACTIVE
+    INACTIVE
+    DELETED
+}
+
+model Category {
+    id Int @id @default(autoincrement())
+    name String @unique
+    description String
+    properties Property[]
+    items Item[]
+}
+
+model ItemToProperty {
+    // Link to item
+    item Item @relation(fields: [itemId], references: [id])
+    itemId Int
+
+    // Link to property
+    property Property @relation(fields: [propertyId], references: [id])
+    propertyId Int
+
+    // Arbitrary value
+    value Json
+
+    @@id([itemId, propertyId])
+}
+
+model Property {
+    id Int @id @default(autoincrement())
+    name String
+    type PropertyType
+
+    options String[]
+
+    // "Property to avertisement" link
+    propertyToItem ItemToProperty[]
+
+    // Link to the category it belongs to
+    category Category @relation(fields: [categoryId], references: [id])
+    categoryId Int
+
+    @@unique([name, categoryId])
+}
+
+enum PropertyType {
+    OPTION
+    MULTI_OPTION
+}
+
+model UserActionLog {
+    id Int @id @default(autoincrement())
+    time DateTime @default(now())
+    user User @relation(fields: [userId], references: [id])
+    userId Int
+    data Json
+}
+
+model ChatDialog {
+    id Int @id @default(autoincrement())
+
+    creatorId Int
+    creator User @relation("ChatDialog.creator", fields: [creatorId], references: [id])
+
+    acceptorId Int
+    acceptor User @relation("ChatDialog.acceptor", fields: [acceptorId], references: [id])
+
+    dateCreated DateTime @default(now())
+    creatorMessage String
+
+    itemId Int
+    item Item @relation(fields: [itemId], references: [id])
+
+    messages ChatMessage[]
+}
+
+model ChatMessage {
+    id Int @id @default(autoincrement())
+
+    senderId Int
+    sender User @relation("ChatMessage.sender", fields: [senderId], references: [id])
+
+    receiverId Int
+    receiver User @relation("ChatMessage.receiver", fields: [receiverId], references: [id])
+
+    dialogId Int
+    dialog ChatDialog @relation(fields: [dialogId], references: [id])
+
+    date DateTime @default(now())
+    text String
+}
